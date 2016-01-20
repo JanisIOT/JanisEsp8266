@@ -10,6 +10,6 @@
 
 
 void wifi_init(void);
-void configure(char * ssid, char * pwd, uint8_t isnew);
+void configure(void);
 
 #endif /* WIFI_H_ */

@@ -6,43 +6,44 @@
 #include "uart.h"
 #include "wifi.h"
 //#include "ws2812.h"
-static char light = '0';
+ char light = '0';
 
 const uint16_t rsplen = 1500;
-static char rsp[1500] = "";
+
+ICACHE_FLASH_ATTR char rsp[1500] = "";
 void build_rsp(void);
 
 //#include <stdio.h>
-void ICACHE_FLASH_ATTR endpoint_setup(void)
+void endpoint_setup(void)
 {
     build_rsp();
 }
-static ICACHE_FLASH_ATTR uint8_t red(int color) {
+ ICACHE_FLASH_ATTR uint8_t red(int color) {
    uint8_t red = (color & 0x00ff0000) >> 16;
    return red;
 }
 
-static ICACHE_FLASH_ATTR uint8_t green(int color) {
+ ICACHE_FLASH_ATTR uint8_t green(int color) {
     uint8_t green = (color & 0x0000ff00) >> 8; 
 return green;
 }
 
-static ICACHE_FLASH_ATTR uint8_t blue(int color) {
+ ICACHE_FLASH_ATTR uint8_t blue(int color) {
 uint8_t blue = (color & 0x000000ff);
  return blue;
 }
-static const coap_endpoint_path_t path_setup = {1, {"setup"}};
-static const coap_endpoint_path_t path_q = {1, {"q"}};
+ICACHE_FLASH_ATTR const coap_endpoint_path_t path_setup = {1, {"setup"}};
+ ICACHE_FLASH_ATTR const coap_endpoint_path_t path_q = {1, {"q"}};
 
-static const coap_endpoint_path_t path_disco = {1, {"disco"}};
-static const coap_endpoint_path_t path_client = {1, {"client"}};
-static const coap_endpoint_path_t path_erase = {1, {"erase"}};
-static const coap_endpoint_path_t path_ping = {1, {"ping"}};
+ ICACHE_FLASH_ATTR const coap_endpoint_path_t path_disco = {1, {"disco"}};
+ ICACHE_FLASH_ATTR const coap_endpoint_path_t path_client = {1, {"client"}};
+ ICACHE_FLASH_ATTR const coap_endpoint_path_t path_erase = {1, {"erase"}};
+ ICACHE_FLASH_ATTR const coap_endpoint_path_t path_ping = {1, {"ping"}};
 
-static const coap_endpoint_path_t path_rgb = {1, {"rgb"}};
-static const coap_endpoint_path_t path_rgbcolor = {1, {"rgbcolor"}};
+ ICACHE_FLASH_ATTR const coap_endpoint_path_t path_rgb = {1, {"rgb"}};
+ ICACHE_FLASH_ATTR const coap_endpoint_path_t path_rgbcolor = {1, {"rgbcolor"}};
 
-static ICACHE_FLASH_ATTR int handle_get_erase(coap_rw_buffer_t *scratch, 
+ ICACHE_FLASH_ATTR int handle_get_erase(coap_rw_buffer_t *scratch, 
                           const coap_packet_t *inpkt, 
                           coap_packet_t *outpkt, 
                           uint8_t id_hi, uint8_t id_lo)
@@ -64,13 +65,13 @@ static ICACHE_FLASH_ATTR int handle_get_erase(coap_rw_buffer_t *scratch,
 
 }
 
-static ICACHE_FLASH_ATTR int handle_get_ping(coap_rw_buffer_t *scratch, 
+ ICACHE_FLASH_ATTR int handle_get_ping(coap_rw_buffer_t *scratch, 
                           const coap_packet_t *inpkt, 
                           coap_packet_t *outpkt, 
                           uint8_t id_hi, uint8_t id_lo)
 {
     int ret = 0;
-    WS2812OutStatus(0);
+    //WS2812OutStatus(0);
     //printf("pong");
     ret = coap_make_response(scratch, outpkt,
 	        (const uint8_t *)"ack", strlen("ack"),
@@ -82,7 +83,7 @@ static ICACHE_FLASH_ATTR int handle_get_ping(coap_rw_buffer_t *scratch,
     return ret;
 
 }
-static ICACHE_FLASH_ATTR int handle_get_client(coap_rw_buffer_t *scratch, 
+ICACHE_FLASH_ATTR int handle_get_client(coap_rw_buffer_t *scratch, 
                           const coap_packet_t *inpkt, 
                           coap_packet_t *outpkt, 
                           uint8_t id_hi, uint8_t id_lo)
@@ -100,15 +101,16 @@ static ICACHE_FLASH_ATTR int handle_get_client(coap_rw_buffer_t *scratch,
     return ret;
 
 }
-static ICACHE_FLASH_ATTR int handle_get_disco(coap_rw_buffer_t *scratch, 
+ ICACHE_FLASH_ATTR int handle_get_disco(coap_rw_buffer_t *scratch, 
                           const coap_packet_t *inpkt, 
                           coap_packet_t *outpkt, 
                           uint8_t id_hi, uint8_t id_lo)
 {
     int ret = 0;
-    WS2812OutStatus(2);
+    //WS2812OutStatus(2);
+    printf("found me!\n");
     ret = coap_make_response(scratch, outpkt,
-	        (const uint8_t *)"1", strlen("1"),
+	        (const uint8_t *)"1\0", strlen("1\0"),
                              id_hi, id_lo, 
                              &inpkt->tok, 
                              COAP_RSPCODE_CONTENT, 
@@ -117,7 +119,7 @@ static ICACHE_FLASH_ATTR int handle_get_disco(coap_rw_buffer_t *scratch,
     return ret;
 
 }
-static ICACHE_FLASH_ATTR int handle_get_rgb(coap_rw_buffer_t *scratch, 
+ ICACHE_FLASH_ATTR int handle_get_rgb(coap_rw_buffer_t *scratch, 
                           const coap_packet_t *inpkt, 
                           coap_packet_t *outpkt, 
                           uint8_t id_hi, uint8_t id_lo)
@@ -140,7 +142,7 @@ static ICACHE_FLASH_ATTR int handle_get_rgb(coap_rw_buffer_t *scratch,
 
 
 
-static ICACHE_FLASH_ATTR int handle_get_rgbcolor(coap_rw_buffer_t *scratch, 
+ ICACHE_FLASH_ATTR int handle_get_rgbcolor(coap_rw_buffer_t *scratch, 
                           const coap_packet_t *inpkt, 
                           coap_packet_t *outpkt, 
                           uint8_t id_hi, uint8_t id_lo)
@@ -173,7 +175,7 @@ static ICACHE_FLASH_ATTR int handle_get_rgbcolor(coap_rw_buffer_t *scratch,
                              COAP_CONTENTTYPE_TEXT_PLAIN);
     return ret;
 }
-static ICACHE_FLASH_ATTR int handle_get_setup(coap_rw_buffer_t *scratch, 
+  ICACHE_FLASH_ATTR int handle_get_setup(coap_rw_buffer_t *scratch, 
                           const coap_packet_t *inpkt, 
                           coap_packet_t *outpkt, 
                           uint8_t id_hi, uint8_t id_lo)
@@ -187,21 +189,21 @@ static ICACHE_FLASH_ATTR int handle_get_setup(coap_rw_buffer_t *scratch,
     sprintf(pay, "%s", inpkt->payload.p);
     char *ssid= strtok(pay,"=");
     char * pwd=strtok(NULL,"=");
-    //printf("ssid---->%s\n",ssid );
-    //printf("pwd---->%s\n",pwd );
-    
-    configure(ssid,pwd,1);
+    printf("ssid---->%s\n",ssid );
+    printf("pwd---->%s\n",pwd );
+    createTimer(ssid,pwd);
 
-    /*ret = coap_make_response(scratch, outpkt,
+    ret = coap_make_response(scratch, outpkt,
                              (const uint8_t *)"2", strlen("2"), 
                              id_hi, id_lo, 
                              &inpkt->tok, 
                              COAP_RSPCODE_CONTENT, 
-                             COAP_CONTENTTYPE_TEXT_PLAIN);*/
-    return 0;
+                             COAP_CONTENTTYPE_TEXT_PLAIN);
+			     
+    return 1;
 }
-static ICACHE_FLASH_ATTR int handle_get_q(coap_rw_buffer_t *scratch, 
-                          const coap_packet_t *inpkt, 
+ICACHE_FLASH_ATTR int handle_get_q(coap_rw_buffer_t *scratch, 
+                         const coap_packet_t *inpkt, 
                           coap_packet_t *outpkt, 
                           uint8_t id_hi, uint8_t id_lo)
 {
@@ -232,7 +234,7 @@ static ICACHE_FLASH_ATTR int handle_get_q(coap_rw_buffer_t *scratch,
                              COAP_CONTENTTYPE_TEXT_PLAIN);
     return ret;
 }
-const coap_endpoint_t endpoints[] =
+ ICACHE_FLASH_ATTR const coap_endpoint_t endpoints[] =
 {
     
     {COAP_METHOD_GET, handle_get_q, &path_q, "ct=40"},
@@ -246,14 +248,14 @@ const coap_endpoint_t endpoints[] =
     {(coap_method_t)0, NULL, NULL, NULL}
 };
 
-void ICACHE_FLASH_ATTR build_rsp(void)
+ICACHE_FLASH_ATTR void  build_rsp(void)
 {
     uint16_t len = rsplen;
     const coap_endpoint_t *ep = endpoints;
     int i;
 
     len--; // Null-terminated string
-
+    printf("building rsp\n");
     while (NULL != ep->handler)
     {
         if (NULL == ep->core_attr) {

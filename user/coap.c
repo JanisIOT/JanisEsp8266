@@ -385,8 +385,10 @@ int ICACHE_FLASH_ATTR coap_make_response(coap_rw_buffer_t *scratch, coap_packet_
     // safe because 1 < MAXOPT
     pkt->opts[0].num = COAP_OPTION_CONTENT_FORMAT;
     pkt->opts[0].buf.p = scratch->p;
-    if (scratch->len < 2)
+    if (scratch->len < 2){
+	printf("errror coap");
         return COAP_ERR_BUFFER_TOO_SMALL;
+    }
     scratch->p[0] = ((uint16_t)content_type & 0xFF00) >> 8;
     scratch->p[1] = ((uint16_t)content_type & 0x00FF);
     pkt->opts[0].buf.len = 2;

@@ -25,8 +25,8 @@ static int nleds = 16;
 static bool tainted=false;
 
 static uint8_t r=255;
-static uint8_t g=255;
-static uint8_t b=255;
+static uint8_t g=0;
+static uint8_t b=0;
 
 #define F_CPU CPU_CLK_FREQ
 #define CYCLES_800_T0H (F_CPU / 2500000)  // 0.4us
@@ -110,20 +110,20 @@ ICACHE_FLASH_ATTR void WS2812OutByte(uint8_t byte) {
 
 ICACHE_FLASH_ATTR void WS2812OutStatus( uint8_t color )
 {
-	uint8_t i;
-	for (i=0;i<5;i++){
-	   switch(color){
+	switch(color){
 		case RED:
-		//	WS2812OutBufferColor(0,255,0,16); 
+ 			r=255;g=0;b=0;
 			break;
 		case GREEN:
-		//	WS2812OutBufferColor(255,0,0,16); 
+ 			r=0;g=255;b=0;
 			break;
 		case BLUE:
-		//	WS2812OutBufferColor(0,0,255,16); 
+ 			r=0;g=0;b=255;
 			break;
 	    }
-	}
+	tainted=true;
+
+//	WS2812OutBufferColor(0,0,255,16); 
 }
 
 
@@ -142,6 +142,21 @@ uint8_t ICACHE_FLASH_ATTR unpackHex(uint8_t * buffer){
 	return h2b(r1,r2);
 }
 
+void ICACHE_FLASH_ATTR statusRGB(uint8_t color){
+       
+	switch(color){
+		case RED:
+ 			r=255;g=0;b=0;
+			break;
+		case GREEN:
+ 			r=0;g=255;b=0;
+			break;
+		case BLUE:
+ 			r=0;g=0;b=255;
+			break;
+	    }
+
+}
 void ICACHE_FLASH_ATTR ledRGB(uint8_t * buffer){
   uint8_t r1 = *buffer;
   buffer++;
@@ -325,7 +340,7 @@ ICACHE_FLASH_ATTR bool WS2812OutPix() {
 
  
 
-void  ledControllerTask(void *p) {
+void  ICACHE_FLASH_ATTR ledControllerTask(void *p) {
   int i;
   PIN_FUNC_SELECT(LED_GPIO_MUX_12, LED_GPIO_FUNC_12);
   GPIO_OUTPUT_SET(GPIO_ID_PIN(WSGPIO), 0);

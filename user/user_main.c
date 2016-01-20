@@ -101,9 +101,9 @@ user_init(void){
     //
     //uart_rx_init();
     //uart_init();
-    //uart_init_new();
+    uart_init_new();
     wifi_init();
-    coap_init();
+   // coap_init();
     leds_init();
 
     //coap_server();

@@ -164,7 +164,7 @@ int ICACHE_FLASH_ATTR coap_make_response(coap_rw_buffer_t *scratch, coap_packet_
 int ICACHE_FLASH_ATTR coap_handle_req(coap_rw_buffer_t *scratch, const coap_packet_t *inpkt, coap_packet_t *outpkt);
 void ICACHE_FLASH_ATTR coap_option_nibble(uint32_t value, uint8_t *nibble);
 void ICACHE_FLASH_ATTR coap_setup(void);
-void ICACHE_FLASH_ATTR endpoint_setup(void);
+void  endpoint_setup(void);
 
 
 #endif
