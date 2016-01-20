@@ -57,8 +57,10 @@ void  ICACHE_FLASH_ATTR wifi_event_cb(System_Event_t *evt) {
 	 //
  	 //wifi_init();
 	if(!read_user_config(&user_config))
-	 	createTimerWifi();
-	 break;
+		config_wifi_new();
+	 //	createTimerWifi();
+	 
+	break;
       case EVENT_STAMODE_SCAN_DONE:
          printf("EVENT_STAMODE_SCAN_DONE\n");
 	 break;
